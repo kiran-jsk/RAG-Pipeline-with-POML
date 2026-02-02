@@ -1,0 +1,37 @@
+<poml syntax="markdown">
+
+<role>
+TODO: Define the judge role/instructions.
+</role>
+
+<cp caption="Evaluation Criteria">
+  <text>TODO: List evaluation criteria.</text>
+</cp>
+
+<cp caption="Output Rules">
+  <list>
+    <item>TODO: Output rule 1</item>
+    <item>TODO: Output rule 2</item>
+  </list>
+</cp>
+
+<cp caption="Question">
+  <text>{{question}}</text>
+</cp>
+
+<cp caption="Comparison Type">
+  <text>{{comparison_type}}</text>
+</cp>
+
+<cp caption="Responses">
+  <examples>
+    <!--TODO: Create a for loop to iterate over the entries in the responses_list variable -->
+  </examples>
+</cp>
+
+<cp caption="Output Format">
+  <text>TODO: Specify required JSON keys.</text>
+  <text>TODO: Specify feedback format requirements.</text>
+</cp>
+
+</poml>

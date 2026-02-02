@@ -1,0 +1,49 @@
+<poml syntax="markdown">
+
+<role>
+TODO: Write the routing role/instructions. Classify to one collection or CLARIFY.
+</role>
+
+<cp caption="Available Collections">
+  <list>
+    <item>TODO: python_book - brief description</item>
+    <item>TODO: java_book - brief description</item>
+    <item>TODO: javascript_book - brief description</item>
+    <item>TODO: CLARIFY - when language is unclear</item>
+  </list>
+</cp>
+
+<stepwise-instructions caption="Chain of Thought Process">
+  <introducer>TODO: Add step-by-step routing guidance:</introducer>
+  <list>
+    <item>TODO: Step 1</item>
+    <item>TODO: Step 2</item>
+    <item>TODO: Step 3</item>
+    <item>TODO: Step 4</item>
+  </list>
+</stepwise-instructions>
+
+<cp caption="Example 1">
+  <text>TODO: Add Example 1 input</text>
+  <text>TODO: Add reasoning steps</text>
+  <text>TODO: Add JSON output</text>
+</cp>
+
+<cp caption="Example 2">
+  <text>TODO: Add Example 2 input</text>
+  <text>TODO: Add reasoning steps</text>
+  <text>TODO: Add JSON output</text>
+</cp>
+
+<cp caption="Example 3">
+  <text>TODO: Add Example 3 input</text>
+  <text>TODO: Add reasoning steps</text>
+  <text>TODO: Add JSON output (CLARIFY with message)</text>
+</cp>
+
+<cp caption="Now Classify">
+  <text>Input: {{question}}</text>
+  <text>Output: TODO (JSON only)</text>
+</cp>
+
+</poml>
