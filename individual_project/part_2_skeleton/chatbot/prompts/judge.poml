@@ -26,6 +26,7 @@ TODO: Define the judge role/instructions.
 <cp caption="Responses">
   <examples>
     <!--TODO: Create a for loop to iterate over the entries in the responses_list variable -->
+    <!--Reference: https://microsoft.github.io/poml/latest/language/template/?h=for+loop#for-attribute -->
   </examples>
 </cp>
 

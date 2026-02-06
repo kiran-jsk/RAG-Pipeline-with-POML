@@ -2,25 +2,29 @@
 
 <!-- ==================== ZERO-SHOT ==================== -->
 <cp if="technique == 'zero_shot'" caption="Zero-Shot">
+
   <role>TODO: Define the assistant role for zero-shot.</role>
   <list>
     <item>TODO: Add instruction 1</item>
     <item>TODO: Add instruction 2</item>
     <item>TODO: Add instruction 3</item>
   </list>
-  <cp caption="Context">
-    <for each="chunk" in="context">
-      <text>{{chunk['content']}}</text>
-      <text>---</text>
-    </for>
+
+  <cp caption="Context" for="chunk in context">
+    <text>{{chunk['content']}}</text>
+    <text>---</text>
   </cp>
+
   <cp caption="Question">
     <text>{{question}}</text>
   </cp>
+
 </cp>
+
 
 <!-- ==================== FEW-SHOT ==================== -->
 <cp if="technique == 'few_shot'" caption="Few-Shot">
+
   <role>TODO: Define the assistant role for few-shot.</role>
   <cp caption="Examples">
     <list>
@@ -28,19 +32,22 @@
       <item>TODO: Example 2 (Q/A)</item>
     </list>
   </cp>
-  <cp caption="Context">
-    <for each="chunk" in="context">
-      <text>{{chunk['content']}}</text>
-      <text>---</text>
-    </for>
+
+  <cp caption="Context" for="chunk in context">
+    <text>{{chunk['content']}}</text>
+    <text>---</text>
   </cp>
+
   <cp caption="Question">
     <text>{{question}}</text>
   </cp>
+
 </cp>
+
 
 <!-- ==================== CHAIN OF THOUGHT ==================== -->
 <cp if="technique == 'cot'" caption="Chain of Thought">
+
   <role>TODO: Define the assistant role for chain-of-thought.</role>
   <stepwise-instructions caption="Reasoning Steps">
     <list>
@@ -49,19 +56,22 @@
       <item>TODO: Step 3</item>
     </list>
   </stepwise-instructions>
-  <cp caption="Context">
-    <for each="chunk" in="context">
-      <text>{{chunk['content']}}</text>
-      <text>---</text>
-    </for>
+
+  <cp caption="Context" for="chunk in context">
+    <text>{{chunk['content']}}</text>
+    <text>---</text>
   </cp>
+
   <cp caption="Question">
     <text>{{question}}</text>
   </cp>
+  
 </cp>
+
 
 <!-- ==================== ADVANCED (STUDENT-SELECTED) ==================== -->
 <cp if="technique == 'advanced'" caption="Advanced (Student-Selected)">
+
   <role>TODO: Define the assistant role for the advanced technique.</role>
   <cp caption="Instructions">
     <list>
@@ -72,15 +82,16 @@
       <item>TODO: Add any additional constraints for answers.</item>
     </list>
   </cp>
-  <cp caption="Context">
-    <for each="chunk" in="context">
-      <text>{{chunk['content']}}</text>
-      <text>---</text>
-    </for>
+
+  <cp caption="Context" for="chunk in context">
+    <text>{{chunk['content']}}</text>
+    <text>---</text>
   </cp>
+
   <cp caption="Question">
     <text>{{question}}</text>
   </cp>
+
 </cp>
 
 </poml>
