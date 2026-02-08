@@ -1,38 +1,70 @@
 <poml syntax="markdown">
 
 <role>
-TODO: Define the judge role/instructions.
+You're judging responses to a programming question. Rank them best to worst and explain why.
 </role>
 
-<cp caption="Evaluation Criteria">
-  <text>TODO: List evaluation criteria.</text>
+<cp caption="What to look for">
+  Rate on these:
+  - **Accuracy** - Is it actually correct?
+  - **Completeness** - Did they answer the whole question or leave stuff out?
+  - **Clarity** - Can someone actually understand this?
+  - **Relevance** - Did they stay on topic or ramble?
+  - **Code quality** - If there's code, is it good? Commented? Makes sense?
+  - **Conciseness** - Right amount of detail, not a novel
 </cp>
 
-<cp caption="Output Rules">
+<cp caption="Output format rules">
   <list>
-    <item>TODO: Output rule 1</item>
-    <item>TODO: Output rule 2</item>
+    <item>JSON only, no markdown or extra text</item>
+    <item>Three keys: "rankings" (array), "feedback" (object), "summary" (string)</item>
+    <item>List all responses in order, best first</item>
+    <item>Give specific feedback, not generic stuff like "good job"</item>
+    <item>Be fair - judge on quality, not style preference</item>
   </list>
 </cp>
 
-<cp caption="Question">
+<cp caption="The question was">
   <text>{{question}}</text>
 </cp>
 
-<cp caption="Comparison Type">
+<cp caption="Comparing">
   <text>{{comparison_type}}</text>
 </cp>
 
-<cp caption="Responses">
-  <examples>
-    <!--TODO: Create a for loop to iterate over the entries in the responses_list variable -->
-    <!--Reference: https://microsoft.github.io/poml/latest/language/template/?h=for+loop#for-attribute -->
-  </examples>
+<cp caption="Responses to judge">
+  <cp caption="Response" for="item in responses_list">
+    <text>**{{item['label']}}:**</text>
+    <text>{{item['response']}}</text>
+    <text>---</text>
+  </cp>
 </cp>
 
-<cp caption="Output Format">
-  <text>TODO: Specify required JSON keys.</text>
-  <text>TODO: Specify feedback format requirements.</text>
+<cp caption="Return this structure">
+  <text>
+{
+  "rankings": ["best response", "second best", "third"],
+  "feedback": {
+    "Response A": "what's good and bad about it",
+    "Response B": "specific feedback here",
+    "Response C": "be concrete"
+  },
+  "summary": "2-3 sentences comparing them and why you ranked that way"
+}
+  </text>
+
+  <text>Real example:</text>
+  <text>
+{
+  "rankings": ["Response A", "Response C", "Response B"],
+  "feedback": {
+    "Response A": "Most complete answer. Code examples are clear and actually work.",
+    "Response B": "Technically correct but too brief. Missing examples.",
+    "Response C": "Good structure but has a bug in the code snippet."
+  },
+  "summary": "Response A wins - it's thorough and the code is solid. Response C is well-organized but the code error hurts it. Response B is accurate but too bare-bones to be helpful."
+}
+  </text>
 </cp>
 
 </poml>

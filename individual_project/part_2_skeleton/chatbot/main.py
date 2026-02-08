@@ -203,13 +203,13 @@ def evaluate_responses(question: str, responses: list, comparison_type: str, jud
     if not responses:
         return {"error": "No responses to evaluate"}
 
-    # TODO use the correct function from the prompt_renderer.py file
-    prompt = TODO(question, responses, comparison_type)
+    # Use the correct function from the prompt_renderer.py file
+    prompt = render_judge_prompt(question, responses, comparison_type)
 
     try:
         llm = ChatGroq(
-            model=TODO,
-            temperature=TODO,
+            model=judge_model,
+            temperature=0.1,
         )
         response = llm.invoke(prompt)
         content = response.content.strip()

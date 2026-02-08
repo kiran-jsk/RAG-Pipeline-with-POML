@@ -32,3 +32,11 @@ node_modules/
 __pycache__/
 .env
 .venv
+
+# Claude stuff
+in_class_activities/01-28/04_poml_rag_integration_saikiran_jagini.ipynb
+individual_project/part_2_skeleton/.claude/
+individual_project/part_2_skeleton/.gitignore
+individual_project/part_2_skeleton/CLAUDE.md
+individual_project/part_2_skeleton/rag_ingestion/chroma_db/
+individual_project/part_2_skeleton/reflections.pdf

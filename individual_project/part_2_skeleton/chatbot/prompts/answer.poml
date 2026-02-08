@@ -3,14 +3,11 @@
 <!-- ==================== ZERO-SHOT ==================== -->
 <cp if="technique == 'zero_shot'" caption="Zero-Shot">
 
-  <role>TODO: Define the assistant role for zero-shot.</role>
-  <list>
-    <item>TODO: Add instruction 1</item>
-    <item>TODO: Add instruction 2</item>
-    <item>TODO: Add instruction 3</item>
-  </list>
+  <role>You're a {{language}} expert helping developers understand their code documentation.</role>
 
-  <cp caption="Context" for="chunk in context">
+  Answer the question using only what's in the context below. If something's not in there, just say so - don't make stuff up. Keep it practical and use code examples when they help.
+
+  <cp caption="Documentation Context" for="chunk in context">
     <text>{{chunk['content']}}</text>
     <text>---</text>
   </cp>
@@ -25,20 +22,25 @@
 <!-- ==================== FEW-SHOT ==================== -->
 <cp if="technique == 'few_shot'" caption="Few-Shot">
 
-  <role>TODO: Define the assistant role for few-shot.</role>
-  <cp caption="Examples">
-    <list>
-      <item>TODO: Example 1 (Q/A)</item>
-      <item>TODO: Example 2 (Q/A)</item>
-    </list>
+  <role>You're a {{language}} expert. Here's how I want you to answer docs questions - look at these examples first.</role>
+
+  <cp caption="Here's the style I'm looking for">
+
+    **Example 1:**
+    Q: "How do you define a function?"
+    A: "Depends on the language. Python uses `def function_name():`, JavaScript can do `function name() {}` or arrow functions `() => {}`, and Java needs a return type like `public void methodName() {}`. Functions just let you wrap up code you'll reuse."
+
+    **Example 2:**
+    Q: "What's the difference between == and ===?"
+    A: "== does type coercion (converts types before comparing), while === checks both type and value without any conversion. So `5 == '5'` is true, but `5 === '5'` is false since one's a number and one's a string."
   </cp>
 
-  <cp caption="Context" for="chunk in context">
+  <cp caption="Documentation Context" for="chunk in context">
     <text>{{chunk['content']}}</text>
     <text>---</text>
   </cp>
 
-  <cp caption="Question">
+  <cp caption="Your Question">
     <text>{{question}}</text>
   </cp>
 
@@ -48,16 +50,19 @@
 <!-- ==================== CHAIN OF THOUGHT ==================== -->
 <cp if="technique == 'cot'" caption="Chain of Thought">
 
-  <role>TODO: Define the assistant role for chain-of-thought.</role>
-  <stepwise-instructions caption="Reasoning Steps">
+  <role>You're a {{language}} expert. Walk through your thinking step-by-step before answering.</role>
+
+  <stepwise-instructions caption="Think through it like this">
     <list>
-      <item>TODO: Step 1</item>
-      <item>TODO: Step 2</item>
-      <item>TODO: Step 3</item>
+      <item>First, what's the question really asking? Break it down.</item>
+      <item>Look through the docs - what parts actually answer this?</item>
+      <item>Put the pieces together. How does this all fit?</item>
+      <item>Now explain it clearly. Code examples help if relevant.</item>
+      <item>Quick sanity check - did I actually answer what they asked?</item>
     </list>
   </stepwise-instructions>
 
-  <cp caption="Context" for="chunk in context">
+  <cp caption="Documentation Context" for="chunk in context">
     <text>{{chunk['content']}}</text>
     <text>---</text>
   </cp>
@@ -65,25 +70,60 @@
   <cp caption="Question">
     <text>{{question}}</text>
   </cp>
-  
+
 </cp>
 
 
-<!-- ==================== ADVANCED (STUDENT-SELECTED) ==================== -->
-<cp if="technique == 'advanced'" caption="Advanced (Student-Selected)">
+<!-- ==================== CONSTRAINED-GUIDED GENERATION ==================== -->
+<cp if="technique == 'advanced'" caption="Constrained Generation">
 
-  <role>TODO: Define the assistant role for the advanced technique.</role>
-  <cp caption="Instructions">
-    <list>
-      <item>TODO: Choose a technique from Nir Diamant's Prompt Engineering repo </item>
-      <item>https://github.com/NirDiamant/Prompt_Engineering?tab=readme-ov-file#prompt-engineering-techniques</item>
-      <item>Make sure to use a different technique than what you chose for the in class activity.</item>
-      <item>TODO: Write instructions that implement that technique.</item>
-      <item>TODO: Add any additional constraints for answers.</item>
-    </list>
+  <role>You're a {{language}} expert using structured responses. Follow the format exactly.</role>
+
+  <cp caption="Response Format (follow this structure)">
+
+    Your answer needs these exact sections:
+
+    1. **SUMMARY:** - One or two sentences. Direct answer, no fluff.
+
+    2. **EXPLANATION:** - 3 to 5 bullet points (use dashes). Pull from the docs.
+
+    3. **CODE_EXAMPLE:** - One snippet with comments. Use triple backticks with language tag.
+       OR if no code makes sense, do **ADDITIONAL_NOTES:** with 2-3 clarifying points instead.
+
+    Rules:
+    - Everything you say must come from the context. If you can't find it, write "INSUFFICIENT_CONTEXT: [what's missing]"
+    - Use proper markdown
+    - Code goes in triple backticks like ```{{language}}
+    - Don't skip sections or add extra ones
+
   </cp>
 
-  <cp caption="Context" for="chunk in context">
+  <cp caption="Here's the template">
+    <text>
+SUMMARY:
+[your 1-2 sentence answer]
+
+EXPLANATION:
+- [point from docs]
+- [another point]
+- [third point]
+- [optional fourth]
+- [optional fifth]
+
+CODE_EXAMPLE:
+```{{language}}
+// code with comments
+```
+
+OR if code doesn't fit:
+
+ADDITIONAL_NOTES:
+- [clarification 1]
+- [clarification 2]
+    </text>
+  </cp>
+
+  <cp caption="Documentation Context" for="chunk in context">
     <text>{{chunk['content']}}</text>
     <text>---</text>
   </cp>

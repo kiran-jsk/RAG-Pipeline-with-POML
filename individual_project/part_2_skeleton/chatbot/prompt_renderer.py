@@ -16,7 +16,7 @@ ANSWER_TECHNIQUES = {
     "zero_shot": "Zero-Shot",
     "few_shot": "Few-Shot",
     "cot": "Chain of Thought",
-    "advanced": "Advanced (Student-Selected)" #TODO: fill in the information on your selected advanced prompt
+    "advanced": "Constrained-Guided Generation"
 }
 
 
@@ -25,8 +25,9 @@ def render_routing_prompt(question: str) -> str:
         str(ROUTING_POML),
         chat=True,
         format="langchain",
-        # TODO: fill in the context that should be passed to the router prompt
-        context={}
+        context={
+            "question": question
+        }
     )
 
     return poml_rendered["messages"][0]["data"]["content"]
@@ -44,12 +45,16 @@ def render_answer_prompt(technique: str, question: str,
         str(ANSWER_POML),
         chat=True,
         format="langchain",
-        # TODO: fill in the context that should be passed to the answer prompt
-        context={}
+        context={
+            "technique": technique,
+            "question": question,
+            "context": context,
+            "language": language,
+            "conversation_context": conversation_context,
+        }
     )
 
-    # TODO: correct the return statement to return just the content of the rendered poml prompt.
-    return poml_rendered
+    return poml_rendered["messages"][0]["data"]["content"]
 
 
 def render_judge_prompt(question: str, responses: list, comparison_type: str) -> str:

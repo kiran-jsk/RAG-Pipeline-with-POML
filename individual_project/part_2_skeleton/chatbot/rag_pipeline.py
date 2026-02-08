@@ -26,8 +26,7 @@ from prompt_renderer import (
 load_dotenv()
 
 # Load Groq API Key from .env file
-# TODO load in your Groq API key from your .env file.
-GROQ_API_KEY = TODO
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 if not GROQ_API_KEY:
     raise ValueError("GROQ_API_KEY is required. Add it to your .env file.")
 
@@ -36,22 +35,21 @@ if not GROQ_API_KEY:
 CHROMA_PATH = Path(__file__).parent.parent / "rag_ingestion" / "chroma_db"
 chroma_client = chromadb.PersistentClient(path=str(CHROMA_PATH))
 
-# The specific embedding model we will use
-# TODO you should have defined this in the ingest_documents.py file. use the same model name here as you entered in that file.
+# The specific embedding model we will use (must match ingest_documents.py)
 embedding_fn = embedding_functions.SentenceTransformerEmbeddingFunction(
-    model_name=TODO
+    model_name="all-MiniLM-L6-v2"
 )
 
 COLLECTIONS = ["python_book", "java_book", "javascript_book"]
 
-# TODO: Select models from groq to fill in here
+# Models from Groq for comparison and routing
 COMPARISON_MODELS = [
-    {"id": "TODO_MODEL_ID_1", "name": "TODO Model 1"},
-    {"id": "TODO_MODEL_ID_2", "name": "TODO Model 2"},
-    {"id": "TODO_MODEL_ID_3", "name": "TODO Model 3"},
+    {"id": "llama-3.3-70b-versatile", "name": "Meta Llama 3.3 70B"},
+    {"id": "openai/gpt-oss-20b", "name": "OpenAI GPT-OSS 20B"},
+    {"id": "moonshotai/kimi-k2-instruct-0905", "name": "Moonshot Kimi K2"},
 ]
-ROUTER_MODEL = "TODO_ROUTER_MODEL_ID"
-JUDGE_MODEL = "TODO_JUDGE_MODEL_ID"
+ROUTER_MODEL = "meta-llama/llama-4-scout-17b-16e-instruct"
+JUDGE_MODEL = "openai/gpt-oss-120b"
 
 
 def extract_json(text: str) -> dict:
@@ -61,12 +59,12 @@ def extract_json(text: str) -> dict:
 
     for match in matches:
         try:
-            return match #TODO load the JSON formatted string, 'matches' into a python dictionary
+            return json.loads(match)
         except json.JSONDecodeError:
             continue
 
     try:
-        return match #TODO load the JSON formatted string, 'matches' into a python dictionary
+        return json.loads(text)
     except json.JSONDecodeError:
         return {"route": "CLARIFY", "message": "Could not parse routing response"}
 
@@ -75,12 +73,11 @@ def route_question(question: str) -> dict:
     """Route the question to the appropriate collection."""
 
     # use the prompt_renderer.py file to build the prompt using the route.poml prompt
-    # TODO use the corrert function from prompt_renderer.py and pass it the question
-    prompt = TODO
+    prompt = render_routing_prompt(question)
 
     llm = ChatGroq(
         model=ROUTER_MODEL,
-        temperature=  #TODO set the temperature you want to use
+        temperature=0.25
     )
     response = llm.invoke(prompt)
 
@@ -103,8 +100,8 @@ def query_collection(collection_name: str, question: str, top_k: int = 5) -> lis
             embedding_function=embedding_fn,
         )
 
-        # TODO query the specified collection. 
-        results = TODO(
+        # Query the specified collection
+        results = collection.query(
             query_texts=[question],
             n_results=top_k,
             include=["documents", "metadatas", "distances"],
@@ -130,7 +127,7 @@ def query_collection(collection_name: str, question: str, top_k: int = 5) -> lis
 
 def generate_response(question: str, context_chunks: list, collection_name: str,
                       conversation_context: str = "", response_technique: str = "zero_shot",
-                      model_id: str = "TODO_DEFAULT_MODEL_ID") -> str:
+                      model_id: str = "llama-3.3-70b-versatile") -> str:
     """Generate a response using an LLM with retrieved context."""
 
     language_map = {
@@ -140,8 +137,8 @@ def generate_response(question: str, context_chunks: list, collection_name: str,
     }
     language = language_map.get(collection_name, "programming")
 
-    #TODO Call the correct function from prompt_renderer.py
-    prompt = TODO(
+    # Call the correct function from prompt_renderer.py
+    prompt = render_answer_prompt(
         technique=response_technique,
         question=question,
         context=context_chunks,
@@ -151,10 +148,10 @@ def generate_response(question: str, context_chunks: list, collection_name: str,
 
     llm = ChatGroq(
         model=model_id,
-        temperature= # TODO set temperature
+        temperature=0.3
     )
-    # TODO Invoke the LLM with the prompt
-    response = TODO
+    # Invoke the LLM with the prompt
+    response = llm.invoke(prompt)
     return response.content.strip()
 
 
@@ -183,7 +180,7 @@ def generate_multi_model_responses(question: str, context_chunks: list, collecti
 
 def generate_multi_technique_responses(question: str, context_chunks: list, collection_name: str,
                                        conversation_context: str = "",
-                                       model_id: str = "TODO_DEFAULT_MODEL_ID") -> list:
+                                       model_id: str = "llama-3.3-70b-versatile") -> list:
     """Generate responses from multiple prompting techniques for comparison."""
     responses = []
     techniques = get_answer_techniques()
